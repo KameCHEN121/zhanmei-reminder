@@ -1,0 +1,63 @@
+name: 占美茶饮 · 值班提醒
+
+on:
+  schedule:
+    # 北京时间 9:50 (UTC 1:50) — 巡检提醒
+    - cron: "50 1 * * *"
+    # 北京时间 13:50 (UTC 5:50) — 午高峰提醒
+    - cron: "50 5 * * *"
+    # 北京时间 16:05 (UTC 8:05) — 大件盘点提醒
+    - cron: "5 8 * * *"
+    # 北京时间 18:50 (UTC 10:50) — 晚高峰提醒
+    - cron: "50 10 * * *"
+  # 允许手动触发
+  workflow_dispatch:
+
+jobs:
+  morning:
+    if: github.event.schedule == '50 1 * * *'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python reminder.py morning
+        env:
+          TZ: Asia/Shanghai
+
+  noon:
+    if: github.event.schedule == '50 5 * * *'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python reminder.py noon
+        env:
+          TZ: Asia/Shanghai
+
+  check:
+    if: github.event.schedule == '5 8 * * *'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python reminder.py check
+        env:
+          TZ: Asia/Shanghai
+
+  evening:
+    if: github.event.schedule == '50 10 * * *'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python reminder.py evening
+        env:
+          TZ: Asia/Shanghai
